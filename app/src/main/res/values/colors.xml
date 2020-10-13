@@ -7,4 +7,5 @@
     <color name="white">#fff</color>
     <color name="black">#000</color>
     <color name="text_color">#2F2F2F</color>
+    <color name="error_color">#FFF0F0</color>
 </resources>

@@ -1,15 +1,16 @@
 package com.android.numberconverter;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import java.text.DecimalFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +23,10 @@ public class MainActivity extends AppCompatActivity {
     Boolean DecimalFocused = false;
     Boolean OctalFocused = false;
     Boolean BinaryFocused = false;
+    Pattern HexPattern;
+    Pattern DecimalPattern;
+    Pattern OctalPattern;
+    Pattern BinaryPattern;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
         DecimalET = findViewById(R.id.decimal_et);
         OctalET = findViewById(R.id.octal_et);
         BinaryET = findViewById(R.id.binary_et);
+
+        HexPattern = Pattern.compile("[^0-9A-F]");
+        DecimalPattern = Pattern.compile("[^0-9]");
+        OctalPattern = Pattern.compile("[^0-7]");
+        BinaryPattern = Pattern.compile("[^0-1]");
 
         HexET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -67,7 +77,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence.length() != 0 && HexFocused) {
-                    String hexNum = charSequence.toString();
+                    String hexNum = charSequence.toString().trim().toUpperCase();
+                    Matcher matcher = HexPattern.matcher(hexNum);
+                    if (hexNum.contains(" ") || matcher.find()) {
+                        HexET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_error_drawable));
+                        return;
+                    }
+                    HexET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
+                    DecimalET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
+                    BinaryET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
+                    OctalET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
                     String Decimal = Converter.getDecimal(hexNum, Converter.HEX);
                     String Octal = Converter.convertDecimal(Decimal, Converter.OCTAL);
                     String Binary = Converter.convertDecimal(Decimal, Converter.BINARY);
@@ -95,7 +114,16 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 if (!DecimalFocused)
                     return;
-                String Decimal = charSequence.toString();
+                String Decimal = charSequence.toString().trim().toUpperCase();
+                Matcher matcher = DecimalPattern.matcher(Decimal);
+                if (Decimal.contains(" ") || matcher.find()) {
+                    DecimalET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_error_drawable));
+                    return;
+                }
+                HexET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
+                DecimalET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
+                BinaryET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
+                OctalET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
                 String Hex = Converter.convertDecimal(Decimal, Converter.HEX);
                 String Octal = Converter.convertDecimal(Decimal, Converter.OCTAL);
                 String Binary = Converter.convertDecimal(Decimal, Converter.BINARY);
@@ -121,7 +149,16 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 if (!OctalFocused)
                     return;
-                String Octal = charSequence.toString();
+                String Octal = charSequence.toString().trim().toUpperCase();
+                Matcher matcher = OctalPattern.matcher(Octal);
+                if (Octal.contains(" ") || matcher.find()) {
+                    OctalET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_error_drawable));
+                    return;
+                }
+                HexET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
+                DecimalET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
+                BinaryET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
+                OctalET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
                 String Decimal = Converter.getDecimal(Octal, Converter.OCTAL);
                 String Hex = Converter.convertDecimal(Decimal, Converter.HEX);
                 String Binary = Converter.convertDecimal(Decimal, Converter.BINARY);
@@ -147,7 +184,16 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 if (!BinaryFocused)
                     return;
-                String Binary = charSequence.toString();
+                String Binary = charSequence.toString().trim();
+                Matcher matcher = OctalPattern.matcher(Binary);
+                if (Binary.contains(" ") || matcher.find()) {
+                    BinaryET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_error_drawable));
+                    return;
+                }
+                HexET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
+                DecimalET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
+                BinaryET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
+                OctalET.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.et_drawable));
                 String Decimal = Converter.getDecimal(Binary, Converter.HEX);
                 String Octal = Converter.convertDecimal(Decimal, Converter.OCTAL);
                 String Hex = Converter.convertDecimal(Decimal, Converter.BINARY);
